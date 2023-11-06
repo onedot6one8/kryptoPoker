@@ -7,27 +7,23 @@
     <title>Holders</title>
     <link
       rel="icon"
-      href="https://ipfs.io/ipfs/bafybeibxdkgk2skfquxdegafxugnqd64wwkqzvmroh3ptofff2mmhawxwe/Tlogo.svg"
+      href="https://cdn.glitch.global/eb9c3dd5-1fef-4767-851e-5c4382870df7/logo.png?v=1699291315939"
       type="image/svg+xml"
     />
-<!--     <link rel="stylesheet" href="styles.css" /> -->
-    
-    
     <style>
       
     body {
       margin: 0;
-/*       overflow: hidden; Hide scrollbars */
       position: relative;
     }
       
     .logo {
       position: fixed;
-      top: 10px; /* Adjust the top position as needed */
-      left: 10px; /* Adjust the left position as needed */
-      width: 250px; /* Set the width of your logo */
-      height: auto; /* Maintain the aspect ratio */
-      z-index: 9999; /* Ensure the logo is on top of other content */
+      top: 10px;
+      left: 10px; 
+      width: 250px; 
+      height: auto; 
+      z-index: 9999;
     }
 
     #video-background {
@@ -36,8 +32,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Cover the entire viewport */
-      z-index: -1; /* Place it behind other content */
+      object-fit: cover;
+      z-index: -1;
     }
       .title {
         margin-bottom: 60%;
@@ -46,7 +42,7 @@
       .container11 {
         text-align: center;
         position: absolute;
-        top: 60vh;
+        top: 40vh;
         left: 25%;
         width: 50%;
         padding: 20px;
@@ -188,8 +184,7 @@
         color: goldenrod;
       }
 
-      .capture-button,
-      .tweet-button {
+      .capture-button {
         text-decoration: none;
         padding: 10px 20px;
         font-size: 10px;
@@ -203,7 +198,7 @@
         z-index: 1;
         font-family: "Alegreya Sans";
         text-shadow: 0px 0px 10px rgba(255, 255, 255, 1);
-        margin-top: 10px; /* Add spacing between buttons */
+        margin-top: 10px;
       }
       
     .loading-circle {
@@ -225,6 +220,54 @@
       0% { transform: translateX(-50%) rotate(0deg); }
       100% { transform: translateX(-50%) rotate(360deg); }
     }
+      
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: transparent;
+    }
+
+    .modal-content {
+      background-color: transparent;
+      margin: 15% auto;
+      padding: 20px;
+/*       border: 1px solid #888; */
+      width: 70%;
+    }
+      
+    .modal-text {
+      padding: 10px 20px;
+      font-size: 20px;
+      color: #ffffff;
+      background-color: #333333;
+      border: 1px solid goldenrod;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+      position: relative;
+      z-index: 1;
+      font-family: "Alegreya Sans";
+      text-shadow: 0px 0px 10px goldenrod;
+      margin-top: 10px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: black;
+    }
     </style>
   </head>
   <body class="holders">
@@ -236,7 +279,7 @@
     <div id="loadedContent"></div>
     <div class="container11">
       <h1 class="connected-address">
-        <span id="connectedAddress">Welcome..</span>
+        <span id="connectedAddress">Hello Hodlers..</span>
       </h1>
       <button class="connect-button" id="connectButton">Connect</button>
       <button
@@ -251,6 +294,14 @@
       <div class="texts" id="messageLabel">Click to connect</div>
       <div class="image-grid" id="ownedNFTs" style="display: none"></div>
     </div>
+    
+    <div id="revealModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2 class="modal-text">Wait for the Reveal</h2>
+        <p class="modal-text">Watch this space for more surprise hands dealt to you.</p>
+      </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
@@ -260,9 +311,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsgif@1.0.2/libgif.min.js"></script>
 
     <script>
-      // $(function () {
-      //   $("#loadedContent").load("body.html", async function () {
-      //     $.getScript("scripts.js");
+
 
           const web3 = new Web3(window.ethereum);
 
@@ -307,8 +356,6 @@
                 // title.style.display = "block";
                 connectButton.style.display = "none";
                 messageLabel.style.display = "none";
-
-                // document.getElementById("title").style.marginBottom = "1000px";
 
                 ownedNFTsElement.innerHTML = "";
 
@@ -363,17 +410,9 @@
                     captureFunction(svgImage, tokenName);
                   };
                   console.log(tokenName);
-                  nftElement.appendChild(captureButton);
-
-                  const tweetButton = document.createElement("button");
-                  tweetButton.textContent = "Tweet your hand";
-                  tweetButton.id = `tweetButton_${tokenId}`;
-                  tweetButton.classList.add("tweet-button");
-                  tweetButton.onclick = () => {
-                    tweetFunction(svgImage, tokenName, tokenId);
-                  };
-                  nftElement.appendChild(tweetButton);
-
+                  
+                  nftElement.appendChild(captureButton);       
+                  
                 }
               }
             } catch (error) {
@@ -404,99 +443,58 @@
             loadingCircle.style.display = "block";
             console.log("wee");
             console.log(tokenName);
-            try {
-              const svgElement = svgImage;
+            
+            revealModal.style.display = "block";
+            loadingCircle.style.display = "none";
+            
+            closeModal.onclick = () => {
+            revealModal.style.display = "none";
+            loadingCircle.style.display = "none";
+          };
 
-              console.log(svgElement);
-              if (!svgElement) return;
-
-              svgElement.style.width = "1000px";
-              svgElement.style.height = "1000px";
-              
-
-              const canvas = await html2canvas(svgElement, {
-                width: 1000,
-                height: 1000,
-              });
-
-              const downloadLink = document.createElement("a");
-
-              canvas.toBlob(async (blob) => {
-                downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = tokenName;
-                downloadLink.click();
-
-                URL.revokeObjectURL(downloadLink.href);
-              }, "image/png");
-
-              loadingCircle.style.display = "none";
-              svgElement.style.width = "";
-              svgElement.style.height = "";
-            } catch (error) {
+          // Close the modal when clicking outside the content
+          window.onclick = (event) => {
+            if (event.target === revealModal) {
+              revealModal.style.display = "none";
               loadingCircle.style.display = "none";
             }
           };
+//             try {
+//               const svgElement = svgImage;
+
+//               console.log(svgElement);
+//               if (!svgElement) return;
+
+//               svgElement.style.width = "1000px";
+//               svgElement.style.height = "1000px";
+              
+
+//               const canvas = await html2canvas(svgElement, {
+//                 width: 1000,
+//                 height: 1000,
+//               });
+
+//               const downloadLink = document.createElement("a");
+
+//               canvas.toBlob(async (blob) => {
+//                 downloadLink.href = URL.createObjectURL(blob);
+//                 downloadLink.download = tokenName;
+//                 downloadLink.click();
+
+//                 URL.revokeObjectURL(downloadLink.href);
+//               }, "image/png");
+
+//               loadingCircle.style.display = "none";
+//               svgElement.style.width = "";
+//               svgElement.style.height = "";
+//             } catch (error) {
+//               loadingCircle.style.display = "none";
+//             }
+          };
       
-//       const tweetFunction = async (svgImage, tokenName, tokenId) => {
-//         loadingCircle.style.display = "block";
-
-//         try {
-//           // Get the image URL of the NFT (assuming the image is hosted on a publicly accessible URL)
-//           const imageUrl = svgImage.src;
-
-//           // Encode the tweet text and image URL
-//           const tweetText = encodeURIComponent(`Check out my ${tokenName} NFT!`);
-//           const tweetImageUrl = encodeURIComponent(imageUrl);
-
-//           // Construct the Twitter sharing URL with the tweet text and image
-//           const twitterShareURL = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetImageUrl}`;
-
-//           // Open the Twitter sharing window
-//           window.open(twitterShareURL, "_blank");
-
-//           loadingCircle.style.display = "none";
-//         } catch (error) {
-//           loadingCircle.style.display = "none";
-//         }
-//       };
       
-      const tweetFunction = async (svgImage, tokenName, tokenId) => {
-        loadingCircle.style.display = "block";
 
-        try {
-          const svgElement = svgImage;
 
-          if (!svgElement) return;
-
-          svgElement.style.width = "1000px";
-          svgElement.style.height = "1000px";
-
-          const canvas = await html2canvas(svgElement, {
-            width: 1000,
-            height: 1000,
-          });
-
-          canvas.toBlob(async (blob) => {
-            // const imageDataURL = URL.createObjectURL(blob);
-            
-            const imageDataURL = "https://cdn.glitch.global/eb9c3dd5-1fef-4767-851e-5c4382870df7/logo.png?v=1699291315939";
-            console.log("imageURL", imageDataURL)
-
-            // Encode the tweet text
-            const tweetText = encodeURIComponent(`Check out my ${tokenName} NFT!`);
-
-            // Construct the Twitter sharing URL with the encoded tweet text and image data URL
-            const twitterShareURL = `https://twitter.com/intent/tweet?text=${tweetText}&media=${imageDataURL}`;
-
-            // Open the Twitter sharing window
-            window.open(twitterShareURL, "_blank");
-
-            loadingCircle.style.display = "none";
-          }, "image/png");
-        } catch (error) {
-          loadingCircle.style.display = "none";
-        }
-      };
     </script>
   </body>
 </html>
